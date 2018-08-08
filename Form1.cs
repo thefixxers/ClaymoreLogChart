@@ -126,7 +126,7 @@ namespace ClaymoreLogChart
             
 
 #if DEBUG
-            ParseLogFile("..\\..\\Logs\\1522270644_log.txt");
+            //ParseLogFile("..\\..\\Logs\\1522270644_log.txt");
 #endif
         }
 
