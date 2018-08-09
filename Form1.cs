@@ -110,8 +110,6 @@ namespace ClaymoreLogChart
         {
             //Loading Prveious Window Location and State
 
-
-
             BindPanelVisibilityToMenuItem(gpuPanel, MenuItemGpuPanel);
             BindPanelVisibilityToMenuItem(hashPanel, MenuItemHashrateStats);
             BindPanelVisibilityToMenuItem(tempPanel, MenuItemTempFanStats);
@@ -141,6 +139,21 @@ namespace ClaymoreLogChart
             Binding b = panel.DataBindings.Add("IsHidden", menuItem, "Checked");
             b.Format += (obj, arg) => { arg.Value = !(bool)arg.Value; };
             b.Parse += (obj, arg) => { arg.Value = !(bool)arg.Value; };
+        }
+        //The following two functions are only used when a previously saved layout loads and one of the panes is hidden. 
+        //In that case the following code is needed to jump start the binding between the pane and related menu item
+        private void FixMenuItemVisibilityBinding(DockContent panel, ToolStripMenuItem menuItem)
+        {
+            menuItem.Checked = false;
+            menuItem.Click += MenuItem_Click;
+        }
+        private void MenuItem_Click(object sender, EventArgs e)
+        {
+            if(gpuPanel.IsHidden)
+            {
+                gpuPanel.Show();
+                ((ToolStripMenuItem)sender).Click -= MenuItem_Click;
+            }
         }
 
         private void MenuItemOpenLog_Click(object sender, EventArgs e)
@@ -261,25 +274,23 @@ namespace ClaymoreLogChart
 
 
             //Panel STates
+
             if (System.IO.File.Exists("layout.xml"))
             {
                 mainPanel.LoadFromXml("layout.xml", InstanciateDockContentPanel);
+
+                FixMenuItemVisibilityBinding(gpuPanel, MenuItemGpuPanel);
             }
             else
             {
                 gpuPanel.Show(mainPanel, DockState.DockLeft);
-
-                /*ChartPanel p = new ChartPanel();
-                p.Show(mainPanel, DockState.Document);
-
-                p = new DockPanels.ChartPanel();
-                p.Show(mainPanel, DockState.Document);*/
-
                 hashPanel.Show(gpuPanel.Pane, DockAlignment.Bottom, 0.33);
                 tempPanel.Show(gpuPanel.Pane, DockAlignment.Bottom, 0.5);
                 statsPanel.Show(mainPanel, DockState.Document);
             }
+
         }
+        
         private void SaveWindowAndPanelsStates()
         {
             mainPanel.SaveAsXml("layout.xml");
