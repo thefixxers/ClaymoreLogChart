@@ -109,7 +109,8 @@ namespace ClaymoreLogChart
         private void Form1_Load(object sender, EventArgs e)
         {
             //Loading Prveious Window Location and State
-            
+
+
 
             BindPanelVisibilityToMenuItem(gpuPanel, MenuItemGpuPanel);
             BindPanelVisibilityToMenuItem(hashPanel, MenuItemHashrateStats);

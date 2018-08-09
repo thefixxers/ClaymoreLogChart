@@ -85,7 +85,7 @@
             this.ColumnIndex.Groupable = false;
             this.ColumnIndex.IsEditable = false;
             this.ColumnIndex.Text = "";
-            this.ColumnIndex.Width = 20;
+            this.ColumnIndex.Width = 30;
             // 
             // ColumnName
             // 
@@ -110,7 +110,7 @@
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.HideOnClose = true;
             this.Name = "GpusPanel";
-            this.Text = "GpusPanel";
+            this.Text = "GPUs";
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ObjectListGpus)).EndInit();
             this.ResumeLayout(false);
