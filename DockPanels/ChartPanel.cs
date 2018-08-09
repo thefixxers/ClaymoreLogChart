@@ -338,7 +338,7 @@ namespace ClaymoreLogChart.DockPanels
 
             Charter.ChartAreas[AREA_FANTEMP].AxisX.Title = "Time";
             Charter.ChartAreas[AREA_FANTEMP].AxisY.Title = "Fan Speed";
-            Charter.ChartAreas[AREA_FANTEMP].AxisY.Minimum = 40;
+            Charter.ChartAreas[AREA_FANTEMP].AxisY.Minimum = 20;
             //Charter.ChartAreas[AREA_FANTEMP].
             //Charter.ChartAreas[AREA_FANSPEED].AxisY2.Title = "Temperature";
 
