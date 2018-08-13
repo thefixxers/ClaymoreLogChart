@@ -144,16 +144,20 @@ namespace ClaymoreLogChart
         //In that case the following code is needed to jump start the binding between the pane and related menu item
         private void FixMenuItemVisibilityBinding(DockContent panel, ToolStripMenuItem menuItem)
         {
-            menuItem.Checked = false;
-            menuItem.Click += MenuItem_Click;
+            if (panel.IsHidden)
+            {
+                menuItem.Checked = false;
+                menuItem.Tag = panel;
+                menuItem.Click += MenuItem_Click;
+            }
         }
         private void MenuItem_Click(object sender, EventArgs e)
         {
-            if(gpuPanel.IsHidden)
-            {
-                gpuPanel.Show();
-                ((ToolStripMenuItem)sender).Click -= MenuItem_Click;
-            }
+            ToolStripMenuItem menuItem = (ToolStripMenuItem)sender;
+            DockContent relatedPanel = menuItem.Tag as DockContent;
+
+            relatedPanel.Show();
+            menuItem.Click -= MenuItem_Click;
         }
 
         private void MenuItemOpenLog_Click(object sender, EventArgs e)
@@ -280,6 +284,9 @@ namespace ClaymoreLogChart
                 mainPanel.LoadFromXml("layout.xml", InstanciateDockContentPanel);
 
                 FixMenuItemVisibilityBinding(gpuPanel, MenuItemGpuPanel);
+                FixMenuItemVisibilityBinding(hashPanel, MenuItemHashrateStats);
+                FixMenuItemVisibilityBinding(tempPanel, MenuItemTempFanStats);
+                FixMenuItemVisibilityBinding(statsPanel, MenuItemStatisticalCharts);
             }
             else
             {

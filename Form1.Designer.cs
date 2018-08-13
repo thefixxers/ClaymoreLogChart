@@ -182,7 +182,7 @@
             this.MenuItemHashrateStats.CheckState = System.Windows.Forms.CheckState.Checked;
             this.MenuItemHashrateStats.Name = "MenuItemHashrateStats";
             this.MenuItemHashrateStats.Size = new System.Drawing.Size(244, 22);
-            this.MenuItemHashrateStats.Text = "GPU Hashrate Stats";
+            this.MenuItemHashrateStats.Text = "GPU Hashrate Stats.";
             // 
             // MenuItemTempFanStats
             // 
@@ -210,7 +210,7 @@
             // MenuItemNewHistoryChart
             // 
             this.MenuItemNewHistoryChart.Name = "MenuItemNewHistoryChart";
-            this.MenuItemNewHistoryChart.ShortcutKeys = System.Windows.Forms.Keys.F2;
+            this.MenuItemNewHistoryChart.ShortcutKeys = System.Windows.Forms.Keys.F5;
             this.MenuItemNewHistoryChart.Size = new System.Drawing.Size(244, 22);
             this.MenuItemNewHistoryChart.Text = "New History Chart Window";
             // 
