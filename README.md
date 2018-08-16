@@ -27,3 +27,7 @@ Dependencies:
 
 - ObjectListView (http://objectlistview.sourceforge.net/cs/index.html) by Philip Piper.
    License: http://www.gnu.org/licenses/gpl.html
+
+
+Installer:
+You can find the Windows Installer here: https://github.com/thefixxers/ClaymoreLogChart/releases
