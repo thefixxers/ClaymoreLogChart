@@ -11,13 +11,13 @@ This is a simple program to visualize the log files created by Claymore's Eth Mi
 - Number of shares found over avergae hashrate
 
 
-How to use this:
+# How to use this:
 - I think you already can guess how to open a log file.
 - If you want to see the hashrate/temp/fan speed values over time, press F5. A new panel opens up. Just drag and drop one or more gpus there.
 - You can rename a gpu by double clicking on its name and typing a new one. These new names can be saved. By doing so, the application creates a new file in the same folder called "gpus.txt" and uses it for all the logs in that folder. So if you have logs from different rigs, it is recommended that you put them in separate folders.
 
 
-Dependencies:
+# Dependencies:
 
 - Appccelerate Event Broker (https://github.com/appccelerate/eventbroker) by Appccelerate team. 
    License: http://www.apache.org/licenses/LICENSE-2.0.html
@@ -29,5 +29,6 @@ Dependencies:
    License: http://www.gnu.org/licenses/gpl.html
 
 
-Installer:
+# Installer:
+
 You can find the Windows Installer here: https://github.com/thefixxers/ClaymoreLogChart/releases
