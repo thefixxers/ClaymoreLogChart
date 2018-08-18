@@ -286,7 +286,10 @@ namespace ClaymoreLogChart.Parsers
             try
             {
                 int gpuIndex = int.Parse(parts[0]);
-                float hashRate = float.Parse(parts[1]);
+                //float hashRate = float.Parse(parts[1]);
+                float hashRate;
+                if (!float.TryParse(parts[1], out hashRate))
+                    hashRate = 0;
 
                 gpus[gpuIndex].HashRate.Add(new HashRateData(time, hashRate));
 

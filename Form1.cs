@@ -70,7 +70,7 @@ namespace ClaymoreLogChart
             ChartPanel newPanel = new ChartPanel();
             newPanel.FormClosing += (s, a) => { RemoveChartPanelFromBrokerAndMenu(newPanel); };
             newPanel.Text = menuText;
-            newPanel.Tag = menuItemName;
+            newPanel.Tag = newPanel;
             newPanel.Show(mainPanel, DockState.Document);
             chartPanels.Add(newPanel);
 
@@ -82,8 +82,8 @@ namespace ClaymoreLogChart
         private void HistoryChartMenuItemClicked(object sender, EventArgs ea)
         {
             ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
-            
-            ChartPanel relatedPanel = chartPanels.Find(x => x.Text == menuItem.Text);
+
+            ChartPanel relatedPanel = menuItem.Tag as ChartPanel;// chartPanels.Find(x => x.Text == menuItem.Text);
             //MessageBox.Show(relatedPanel.Text);
             relatedPanel.Show();
         }
