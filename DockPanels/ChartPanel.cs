@@ -366,10 +366,17 @@ namespace ClaymoreLogChart.DockPanels
             //Charter.Legends[0].Docking = Docking.Bottom;
         }
 
+        #region -- Subscriptions --
         [EventSubscription("topic://Gpu/Renamed", typeof(OnUserInterface))]
         public void GpuSelectedHandler(object sender, EventArgs<int> ea)
         {
             CreateLegendsPanel();
         }
+        #endregion
+
+        #region -- Publications --
+        [EventPublication("topic://Panel/Closed")]
+        public event EventHandler<EventArgs<DockContent>> PanelClosed;
+        #endregion
     }
 }

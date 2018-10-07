@@ -109,6 +109,12 @@
     <Compile Include="DockPanels\ChartPanel.Designer.cs">
       <DependentUpon>ChartPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="DockPanels\GpuDetailPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DockPanels\GpuDetailPanel.Designer.cs">
+      <DependentUpon>GpuDetailPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="DockPanels\GpusPanel.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,6 +165,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DockPanels\ChartPanel.resx">
       <DependentUpon>ChartPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DockPanels\GpuDetailPanel.resx">
+      <DependentUpon>GpuDetailPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DockPanels\GpusPanel.resx">
       <DependentUpon>GpusPanel.cs</DependentUpon>

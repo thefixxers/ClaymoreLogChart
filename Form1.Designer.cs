@@ -48,7 +48,6 @@
             this.MenuItemStatisticalCharts = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.MenuItemNewHistoryChart = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.PanelMain = new System.Windows.Forms.Panel();
@@ -160,8 +159,7 @@
             this.MenuItemTempFanStats,
             this.MenuItemStatisticalCharts,
             this.toolStripMenuItem2,
-            this.MenuItemNewHistoryChart,
-            this.toolStripMenuItem3});
+            this.MenuItemNewHistoryChart});
             this.MenuView.Name = "MenuView";
             this.MenuView.Size = new System.Drawing.Size(44, 20);
             this.MenuView.Text = "View";
@@ -213,11 +211,6 @@
             this.MenuItemNewHistoryChart.ShortcutKeys = System.Windows.Forms.Keys.F5;
             this.MenuItemNewHistoryChart.Size = new System.Drawing.Size(244, 22);
             this.MenuItemNewHistoryChart.Text = "New History Chart Window";
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(241, 6);
             // 
             // aboutToolStripMenuItem
             // 
@@ -283,7 +276,6 @@
         private System.Windows.Forms.ToolStripMenuItem MenuItemStatisticalCharts;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem MenuItemNewHistoryChart;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mnuAbout;
         private System.Windows.Forms.ToolStripMenuItem MenuItemOpenGpuNames;

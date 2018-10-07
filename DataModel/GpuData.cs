@@ -13,9 +13,17 @@ namespace ClaymoreLogChart.DataModel
         public string NickName;
         public string PciePort;
         public string Algorithm;
+        public GpuManufacturer Manufacturer;
 
         public int SharesFound = 0;
         public int IncorrectShares = 0;
+
+        public int? CoreClock = null;
+        public int? MemoryClock = null;
+        public int? PowerLimit = null;
+        public int? CoreVoltage = null;
+        public int? MemoryVoltage = null;
+        public int? GoalTemperature = null;
 
         private float avrHash = float.NaN;
         private float avrTemp = float.NaN;
@@ -29,7 +37,6 @@ namespace ClaymoreLogChart.DataModel
         private float sdvHash = float.NaN;
         private float sdvTemp = float.NaN;
         private float sdvFan = float.NaN;
-
         
         public float AvergaeHashRate { get { if (float.IsNaN(avrHash)) CalculateAveragesAndMinMax(); return avrHash; } }
         public float AvergaeTemperature { get { if (float.IsNaN(avrTemp)) CalculateAveragesAndMinMax(); return avrTemp; } }
@@ -121,5 +128,12 @@ namespace ClaymoreLogChart.DataModel
         {
             return Temps.Select(temp => temp.FanSpeed).ToArray();
         }
+    }
+
+    public enum GpuManufacturer
+    {
+        AMD,
+        NVidia,
+        Other
     }
 }

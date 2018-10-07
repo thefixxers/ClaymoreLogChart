@@ -31,6 +31,7 @@ namespace ClaymoreLogChart
 
         private DockPanel mainPanel = new DockPanel();
         private GpusPanel gpuPanel = new GpusPanel();
+        private GpuDetailPanel gpuDetail = new GpuDetailPanel();
         private HashrateStatsPanel hashPanel = new HashrateStatsPanel();
         private TempFanStatsPanel tempPanel = new TempFanStatsPanel();
         private StatisticsChartsPanel statsPanel = new StatisticsChartsPanel();
@@ -68,13 +69,16 @@ namespace ClaymoreLogChart
             string menuText = "History Chart " + chartId;
             string menuItemName = "MenuItem_Chart_" + chartId;
             ChartPanel newPanel = new ChartPanel();
-            newPanel.FormClosing += (s, a) => { RemoveChartPanelFromBrokerAndMenu(newPanel); };
+            newPanel.FormClosing += (s, a) => { RemoveChartPanelFromBrokerAndMenu(newPanel, menuItemName); };
             newPanel.Text = menuText;
             newPanel.Tag = newPanel;
             newPanel.Show(mainPanel, DockState.Document);
             chartPanels.Add(newPanel);
 
             shadowBroker.Register(newPanel);
+
+            if (chartPanels.Count == 1)
+                MenuView.DropDownItems.Add(new ToolStripSeparator());
 
             ToolStripMenuItem newMenuItem = new ToolStripMenuItem(menuText, null, HistoryChartMenuItemClicked /*(s, ea) => { chartPanels.Find(x => x.Text == menuText)?.Focus(); }*/, menuItemName);
             MenuView.DropDownItems.Add(newMenuItem);
@@ -84,17 +88,20 @@ namespace ClaymoreLogChart
             ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
 
             ChartPanel relatedPanel = menuItem.Tag as ChartPanel;// chartPanels.Find(x => x.Text == menuItem.Text);
-            //MessageBox.Show(relatedPanel.Text);
             relatedPanel.Show();
         }
-        private void RemoveChartPanelFromBrokerAndMenu(ChartPanel panel)
+        private void RemoveChartPanelFromBrokerAndMenu(ChartPanel panel, string key)
         {
             chartPanels.Remove(panel);
             shadowBroker.Unregister(panel);
 
-            ToolStripItem[] items = MenuView.DropDownItems.Find(panel.Tag.ToString(), true);
+            ToolStripItem[] items = MenuView.DropDownItems.Find(key, true);
             if (items != null && items.Length > 0)
+            {
                 MenuView.DropDownItems.Remove(items[0]);
+                if (chartPanels.Count == 0)
+                    MenuView.DropDownItems.RemoveAt(MenuView.DropDownItems.IndexOf(MenuItemNewHistoryChart) + 1);
+            }
         }
 
         private IDockContent InstanciateDockContentPanel(string objectType)
@@ -140,6 +147,7 @@ namespace ClaymoreLogChart
             b.Format += (obj, arg) => { arg.Value = !(bool)arg.Value; };
             b.Parse += (obj, arg) => { arg.Value = !(bool)arg.Value; };
         }
+
         //The following two functions are only used when a previously saved layout loads and one of the panes is hidden. 
         //In that case the following code is needed to jump start the binding between the pane and related menu item
         private void FixMenuItemVisibilityBinding(DockContent panel, ToolStripMenuItem menuItem)
@@ -243,9 +251,10 @@ namespace ClaymoreLogChart
 
             loadDlg.ShowDialog();
 
-            gpuPanel.SetObjects(parser.gpus.Values.ToList());
-
             Globals.GPUs = parser.gpus.Values.ToList();
+            gpuDetail.SetObjects(Globals.GPUs);
+            gpuPanel.SetObjects(Globals.GPUs);
+
             DocumentChanged?.Invoke(this, null);
         }
 
@@ -255,6 +264,14 @@ namespace ClaymoreLogChart
         public event EventHandler DocumentChanged;
         [EventPublication("topic://Gpu/Renamed")]
         public event EventHandler<EventArgs<int>> GpuRenamed;
+        #endregion
+
+        #region -- Event Sunscriptions --
+        [EventSubscription("topic://Panel/Closed", typeof(OnUserInterface))]
+        public void PanelClosedHandler(object sender, EventArgs<DockContent> ea)
+        {
+
+        }
         #endregion
 
         private void MenuItemExit_Click(object sender, EventArgs e)
@@ -295,7 +312,7 @@ namespace ClaymoreLogChart
                 tempPanel.Show(gpuPanel.Pane, DockAlignment.Bottom, 0.5);
                 statsPanel.Show(mainPanel, DockState.Document);
             }
-
+            gpuDetail.Show(mainPanel, DockState.Document);
         }
         
         private void SaveWindowAndPanelsStates()

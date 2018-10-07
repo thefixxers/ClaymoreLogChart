@@ -10,7 +10,7 @@ namespace ClaymoreLogChart.VisualStylers
     public static class ThemeColors
     {
         public static Color WindowContentBackgroundDarkTheme = Color.FromArgb(255, 37, 37, 38);
-        public static Color WindowContentForegroundDarkTheme = Color.FromArgb(255, 241, 241, 241);
+        public static Color WindowContentForegroundDarkTheme = Color.FromArgb(255, 221, 221, 221);
         public static Color WindowSubTitleBackgroundDarkTheme = Color.FromArgb(255, 51, 51, 52);
         //public static Color ScrollBarThumbColor = Color.FromArgb(255, 104, 104, 104);
         //public static Color ScrollBarThumbMouseOverColor = Color.FromArgb(255, 153, 153, 153);
@@ -18,11 +18,15 @@ namespace ClaymoreLogChart.VisualStylers
         public static Color ErrorMessageForegroundColor = WindowContentForegroundDarkTheme;
         public static Color UnfocusedSelectedBackgroundColor = Color.FromArgb(255, 85, 85, 85);
         public static Color FocusedSelectedBackgroundColor = Color.FromArgb(255, 14, 97, 152);
+
         public static Color ToolbarStripBackgroundColor = Color.FromArgb(255, 45, 45, 48);
         public static Color ToolbarStripForegroundColor = WindowContentForegroundDarkTheme;
         public static Color ToolbarStripWindowColor = Color.FromArgb(255, 27, 27, 27);
         public static Color ToolbarStripBorderColor = Color.FromArgb(255, 63, 63, 70);
         public static Color ToolbarStripDisabledColor = ToolbarStripBorderColor;
+
+        public static Color ListHeaderNormalBackground = Color.FromArgb(255, 51, 51, 51);
+        public static Color ListHeaderNormalForeground = Color.FromArgb(255, 255, 255, 255);
 
         public static Color ChartAxisColor = Color.FromArgb(255, 241, 241, 241);
         public static Color ChartMajorLineColor = Color.FromArgb(255, 85, 85, 85);

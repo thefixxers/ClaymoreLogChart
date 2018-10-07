@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -48,8 +49,10 @@ namespace ClaymoreLogChart.Parsers
             ExtractHashrateAndTemps();
             ReportProgress(80, "Extracting GPU Shares Found Data\n");
             ExtractFoundSharesData();
-            ReportProgress(90, "Extracting GPU Incorrect Shares Data\n");
+            ReportProgress(87, "Extracting GPU Incorrect Shares Data\n");
             ExtractIncorrectSharesData();
+            ReportProgress(94, "Extracting Miner GPU Settings\n");
+            ExtractMinerAndGpuSettings();
         }
 
         private void ResetCounters()
@@ -131,6 +134,7 @@ namespace ClaymoreLogChart.Parsers
         private void ExtractGpuCountAndInfo()
         {
             string gpuPattern = @"GPU #\d*: ";
+            string nvidiaPattern = @"NVIDIA";
             string totPattern = @"Total cards: ";
 
             Regex gpuRgx = new Regex(gpuPattern, RegexOptions.Compiled);
@@ -143,6 +147,7 @@ namespace ClaymoreLogChart.Parsers
             GpuData data;
             gpus = new Dictionary<int, GpuData>();
 
+            GpuManufacturer gpuType = GpuManufacturer.AMD;
             foreach (LogEntry entry in logs)
             {
                 if (gpuRgx.IsMatch(entry.LogText))
@@ -166,6 +171,7 @@ namespace ClaymoreLogChart.Parsers
                         data.PciePort = temp.Substring(charIndex+7, temp.LastIndexOf(')') - charIndex - 7).Trim();
                     }
 
+                    data.Manufacturer = gpuType;
 
                     gpus[gpuIndex] = data;
                 }
@@ -174,6 +180,11 @@ namespace ClaymoreLogChart.Parsers
                     totalGpus = int.Parse(entry.LogText.Substring(13));
                     Console.WriteLine(totalGpus);
                     break;
+                }
+                else if (entry.LogText.StartsWith(nvidiaPattern))
+                {
+                    //In claymore logs, all the AMD cards are listed first, thereofre after this line all the reported gpus will be nvidia
+                    gpuType = GpuManufacturer.NVidia;
                 }
             }
 
@@ -260,6 +271,87 @@ namespace ClaymoreLogChart.Parsers
             }
         }
 
+        private void ExtractMinerAndGpuSettings()
+        {
+            int argsLineIndex = 0;
+            string argsLinePattern = "args:";
+
+            while (argsLineIndex < logs.Count && !logs[argsLineIndex].LogText.StartsWith(argsLinePattern))
+                argsLineIndex++;
+
+            if (argsLineIndex == logs.Count)
+                return;
+
+            int?[] argValues;
+            //Read Core Clock Values
+            argValues = ReadArgValues(logs[argsLineIndex].LogText, "cclock", true, false);
+            for (int i = 0; i < gpus.Count; i++) gpus[i].CoreClock = argValues[i];
+
+            //Read Memory Clock Values
+            argValues = ReadArgValues(logs[argsLineIndex].LogText, "mclock", true, false);
+            for (int i = 0; i < gpus.Count; i++) gpus[i].MemoryClock = argValues[i];
+
+            //Read Power Limit Values
+            argValues = ReadArgValues(logs[argsLineIndex].LogText, "powlim", true, true);
+            for (int i = 0; i < gpus.Count; i++) gpus[i].PowerLimit = argValues[i];
+
+            //Read Core Voltage Values
+            argValues = ReadArgValues(logs[argsLineIndex].LogText, "cvddc", true, false);
+            for (int i = 0; i < gpus.Count; i++) gpus[i].CoreVoltage = argValues[i];
+
+            //Read Memory Voltage Values
+            argValues = ReadArgValues(logs[argsLineIndex].LogText, "mvddc", true, false);
+            for (int i = 0; i < gpus.Count; i++) gpus[i].MemoryVoltage = argValues[i];
+
+            //Read Goal Temperatures Values
+            argValues = ReadArgValues(logs[argsLineIndex].LogText, "tt", true, true);
+            for (int i = 0; i < gpus.Count; i++) gpus[i].GoalTemperature = argValues[i];
+
+        }
+        //Reads a given arg values and assigns them to the gpus in the same order. The last value will be repeated for all remaining GPUs excpet NVidia ones.
+        //NOTE: The copy for NVidia should only be set to true if the arg can be copied from AMD to NVIDIA, for example power limit (powlim) or temp (tt)
+        private int?[] ReadArgValues(string logLine, string arg, bool copyLast, bool copyForNvidia)
+        {
+            int?[] argValues = new int?[gpus.Count];
+
+            logLine = logLine.ToUpper();
+            arg = arg.ToUpper();
+
+            int argStart = logLine.IndexOf(arg);
+            if (argStart < 0)
+                return argValues;
+
+            string cutTheBS = logLine.Substring(argStart+arg.Length);
+            Regex nextArg = new Regex(@"-[A-Z]", RegexOptions.Compiled);
+
+            cutTheBS = nextArg.Replace(cutTheBS, ">");
+            int argEnd = cutTheBS.IndexOf(">");
+            if(argEnd!=-1)
+                cutTheBS = cutTheBS.Substring(0, argEnd).Trim();
+
+            string[] values = cutTheBS.Split(',');
+            int numToCopy = Math.Min(gpus.Count, values.Length);
+
+            int argValue;
+            
+            for(int i=0;i<numToCopy;i++)
+            {
+                if (int.TryParse(values[i], out argValue))
+                    argValues[i] = argValue;
+            }
+
+            if(copyLast && gpus.Count > values.Length)
+            {
+                int lastIndex = values.Length - 1;
+
+                for (int i = values.Length - 1; i < gpus.Count; i++)
+                    if(gpus[i].Manufacturer!= GpuManufacturer.NVidia || copyForNvidia || gpus[lastIndex].Manufacturer==GpuManufacturer.NVidia)
+                        argValues[i] = argValues[values.Length - 1];
+            }
+
+            return argValues;
+        }
+
         private void ParseTempFanData(TimeSpan time, string gpuTempFan)
         {
             gpuTempFan = gpuTempFan.Replace("t=", "").Replace("fan=", "").Replace("%", "").Replace("; ", "").Replace("C", "").Replace(",", "");
@@ -311,7 +403,7 @@ namespace ClaymoreLogChart.Parsers
         private bool ShouldKeepLog(string log)
         {
             bool shouldKeep = false;
-            string[] importantLogTexts = { "args:", "GPU", "FOUND", "incorrect", "Total" };
+            string[] importantLogTexts = { "args:", "GPU", "FOUND", "incorrect", "Total", "NVIDIA" };
 
             foreach (string str in importantLogTexts)
                 if (log.Contains(str))
