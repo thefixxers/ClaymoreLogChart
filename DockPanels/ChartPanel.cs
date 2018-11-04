@@ -75,6 +75,7 @@ namespace ClaymoreLogChart.DockPanels
 
         private void ChartPanel_MouseWheel(object sender, MouseEventArgs e)
         {
+            return;
             //
             // https://stackoverflow.com/questions/13584061/how-to-enable-zooming-in-microsoft-chart-control-by-using-mouse-wheel
             //
@@ -310,6 +311,11 @@ namespace ClaymoreLogChart.DockPanels
                 Charter.ChartAreas[i].AxisX.ScrollBar.ButtonColor = ThemeColors.ChartScrollBarButtonColor;
                 Charter.ChartAreas[i].AxisX.ScrollBar.LineColor = ThemeColors.ChartScrollBarBorderColor;
 
+                //Axis Y Scroll Bar
+                Charter.ChartAreas[i].AxisY.ScrollBar.BackColor = ThemeColors.ChartScrollBarBackColor;
+                Charter.ChartAreas[i].AxisY.ScrollBar.ButtonColor = ThemeColors.ChartScrollBarButtonColor;
+                Charter.ChartAreas[i].AxisY.ScrollBar.LineColor = ThemeColors.ChartScrollBarBorderColor;
+
 
                 Charter.ChartAreas[i].AxisX.LabelStyle.Format = "HH:mm\n\rdd/MM/y";// "Dd-HH:mm";
                 
@@ -323,7 +329,14 @@ namespace ClaymoreLogChart.DockPanels
                 Charter.ChartAreas[i].AxisX.ScaleView.SmallScrollSizeType = DateTimeIntervalType.Minutes;
                 Charter.ChartAreas[i].AxisX.ScaleView.SmallScrollMinSize = 1;
                 Charter.ChartAreas[i].AxisX.ScaleView.SmallScrollMinSizeType = DateTimeIntervalType.Minutes;
-                Charter.ChartAreas[i].AxisX.ScrollBar.ButtonStyle = ScrollBarButtonStyles.SmallScroll;
+                Charter.ChartAreas[i].AxisX.ScrollBar.ButtonStyle = ScrollBarButtonStyles.All;
+
+                Charter.ChartAreas[i].CursorX.IsUserEnabled = true;
+                Charter.ChartAreas[i].CursorY.IsUserSelectionEnabled = true;
+                Charter.ChartAreas[i].CursorY.Interval = .1;
+                Charter.ChartAreas[i].CursorY.AutoScroll = true;
+                Charter.ChartAreas[i].AxisY.ScaleView.Zoomable = true;
+                Charter.ChartAreas[i].AxisY.ScrollBar.ButtonStyle = ScrollBarButtonStyles.All;
 
                 Charter.ChartAreas[i].InnerPlotPosition.Auto = true;
             }

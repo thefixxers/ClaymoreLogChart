@@ -30,9 +30,9 @@ namespace ClaymoreLogChart.VisualStylers
 
         public static Color ChartAxisColor = Color.FromArgb(255, 241, 241, 241);
         public static Color ChartMajorLineColor = Color.FromArgb(255, 85, 85, 85);
-        public static Color ChartScrollBarBorderColor = Color.FromArgb(255, 37, 37, 38);
-        public static Color ChartScrollBarBackColor = Color.FromArgb(255, 37, 37, 38);
-        public static Color ChartScrollBarButtonColor = Color.FromArgb(255, 85, 85, 85);
+        public static Color ChartScrollBarBorderColor = Color.FromArgb(255, 85, 85, 85);
+        public static Color ChartScrollBarBackColor = Color.FromArgb(255, 63, 63, 70);
+        public static Color ChartScrollBarButtonColor = Color.FromArgb(255, 37, 37, 38);
 
         public static Color[] BotntonColors = {
                                                 Color.FromArgb(0, 0, 160),      // Blue
