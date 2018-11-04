@@ -14,6 +14,7 @@ namespace ClaymoreLogChart.DataModel
         public string PciePort;
         public string Algorithm;
         public GpuManufacturer Manufacturer;
+        public DateTime RigStartTime = new DateTime();
 
         public int SharesFound = 0;
         public int IncorrectShares = 0;
@@ -89,6 +90,15 @@ namespace ClaymoreLogChart.DataModel
 
         private void CalculateAveragesAndMinMax()
         {
+            if(HashRate.Count<30)
+            {
+                avrHash = minHash = maxHash =
+                avrFan  = minFan  = maxFan  =
+                avrTemp = minTemp = maxTemp = -1;
+
+                return;
+            }
+
             avrHash = (float)HashRate.Skip(HashRate.Count > 20 ? 20 : 0).Average(x => x.HashRate);
             minHash = HashRate.SkipWhile(x => x.HashRate == 0).Min(x => x.HashRate);
             maxHash = HashRate.Max(x => x.HashRate);
@@ -109,7 +119,7 @@ namespace ClaymoreLogChart.DataModel
 
         public double[] GetHashRateTimes()
         {
-            return HashRate.Select(hash => new DateTime(1900,1,1).Add(hash.Time).ToOADate()).ToArray();
+            return HashRate.Select(hash => new DateTime(RigStartTime.Ticks).Add(hash.Time).ToOADate()).ToArray();
         }
         public float[] GetHashRateValues()
         {
@@ -118,7 +128,7 @@ namespace ClaymoreLogChart.DataModel
 
         public double[] GetTempTimes()
         {
-            return Temps.Select(temp => new DateTime(1900, 1, 1).Add(temp.Time).ToOADate()).ToArray();
+            return Temps.Select(temp => new DateTime(RigStartTime.Ticks).Add(temp.Time).ToOADate()).ToArray();
         }
         public int[] GetTempValues()
         {

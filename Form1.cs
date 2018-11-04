@@ -126,6 +126,7 @@ namespace ClaymoreLogChart
 
             shadowBroker.Register(this);
             shadowBroker.Register(gpuPanel);
+            shadowBroker.Register(gpuDetail);
             shadowBroker.Register(hashPanel);
             shadowBroker.Register(tempPanel);
             shadowBroker.Register(statsPanel);

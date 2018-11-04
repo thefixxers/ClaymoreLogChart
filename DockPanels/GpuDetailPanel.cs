@@ -42,6 +42,7 @@ namespace ClaymoreLogChart.DockPanels
             ColumnColor.AspectToStringConverter = (obj) => { return " "; };
             ColumnColor.RendererDelegate = ColorRender;
             ColumnBrand.ImageGetter = (obj) => { return (obj as GpuData).Manufacturer.ToString().ToLower() + "_full.png"; };
+            ColumnName.AspectPutter = delegate (object gpu, object newValue) { GpuData gData = gpu as GpuData; gData.NickName = newValue.ToString(); GpuRenamed?.Invoke(this, new EventArgs<int>(gData.Index)); };
 
             //AspectGetter for Nullable Fields. It shows "N/A" instead of just being empty
             ColumnCClock.AspectToStringConverter = NullFieldAspectGetter;
@@ -107,5 +108,16 @@ namespace ClaymoreLogChart.DockPanels
             ObjectListGpus.HeaderWordWrap = true;
             ObjectListGpus.HeaderFormatStyle = headerStyle;
         }
+
+        [EventSubscription("topic://Gpu/Renamed", typeof(OnUserInterface))]
+        public void GpuSelectedHandler(object sender, EventArgs<int> ea)
+        {
+            ObjectListGpus.Refresh();
+        }
+
+        #region -- Event Publication --
+        [EventPublication("topic://Gpu/Renamed")]
+        public event EventHandler<EventArgs<int>> GpuRenamed;
+        #endregion
     }
 }

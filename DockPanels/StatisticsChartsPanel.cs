@@ -39,7 +39,7 @@ namespace ClaymoreLogChart.DockPanels
 
             menuItems = new MenuItemFuncRelation[] {
                 new MenuItemFuncRelation("None",                               RemoveSeriesIfExists),
-                new MenuItemFuncRelation( "-",                                 null),
+                new MenuItemFuncRelation("-",                                  null),
                 new MenuItemFuncRelation("Average Hashrate",                   ShowAverageHashrates),
                 new MenuItemFuncRelation("Average Temperature",                ShowAverageTemperatures),
                 new MenuItemFuncRelation("Average Fan Speed",                  ShowAverageFanSpeed),
@@ -75,6 +75,12 @@ namespace ClaymoreLogChart.DockPanels
                     chartAreaVisibilities[i] = Charter.ChartAreas[i].Visible;
                     if (Charter.ChartAreas[i] != chart)
                         Charter.ChartAreas[i].Visible = false;
+                    else
+                    {
+                        //The idea was to write the labels on the columns, but it is abandoned for now
+                        //MessageBox.Show(chart.Name.ToString());
+                        Charter.PostPaint += Charter_PostPaint;
+                    }
                 }
             }
             else
@@ -83,8 +89,56 @@ namespace ClaymoreLogChart.DockPanels
                 {
                     Charter.ChartAreas[i].Visible = chartAreaVisibilities[i];
                 }
+                Charter.PostPaint -= Charter_PostPaint;
             }
             isInZoomMode = !isInZoomMode;
+        }
+
+        private void Charter_PostPaint(object sender, ChartPaintEventArgs e)
+        {
+            ChartArea area = e.ChartElement as ChartArea;
+            if (area != selectedChartArea)
+                return;
+
+            int cx, cy, ey;
+            StringFormat format = new StringFormat();
+            format.Alignment = StringAlignment.Far;
+            format.LineAlignment = StringAlignment.Center;
+
+            Graphics grfx = e.ChartGraphics.Graphics;
+            Bitmap bmp;
+            using (Font font = new Font(FontFamily.GenericSansSerif, 12))
+            {
+                for (int index = 0; index < Globals.GPUs.Count; index++)
+                {
+                    cx = (int)area.AxisX.ValueToPixelPosition(index + 1);
+                    cy = (int)area.AxisY.ValueToPixelPosition(0);
+                    ey = (int)area.AxisY.ValueToPixelPosition(e.Chart.Series[area.Name].Points[index].YValues[0]);
+
+                    SizeF textSize = grfx.MeasureString(Globals.GPUs[index].Text, font, cy - ey, format);
+                    //RectangleF textRect = new RectangleF(cx - textSize.Width, ey, textSize.Width, cy - ey);
+
+                    bmp = new Bitmap((int)textSize.Width, (int)textSize.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+                    using (Graphics bgrfx = Graphics.FromImage(bmp))
+                    {
+                        //bgrfx.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixel;
+                        //using (SolidBrush backBr = new SolidBrush(ThemeColors.PresetColors[index]))
+                        //    bgrfx.FillRectangle(backBr, 0, 0, bmp.Width, bmp.Height);
+                        bgrfx.DrawString(Globals.GPUs[index].Text, font, Brushes.White, 0, 0);
+                        //TextRenderer.DrawText(bgrfx, Globals.GPUs[index].Text, font, new Point(0,0), Color.White);
+                    }
+                    bmp.RotateFlip(RotateFlipType.Rotate270FlipNone);
+                    //grfx.FillRectangle(Brushes.Lime, cx - textSize.Width / 2, cy - textSize.Height, textSize.Width, textSize.Height);
+                    grfx.DrawImage(bmp, cx - bmp.Width / 2, cy - bmp.Height);
+                    //grfx.DrawImage(bmp, 10, 10);
+                }
+            }
+        }
+
+        private void AddDetailsToChart(ChartArea chart)
+        {
+            
         }
 
         private void Charter_MouseMove(object sender, MouseEventArgs e)

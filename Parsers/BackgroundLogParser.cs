@@ -15,6 +15,8 @@ namespace ClaymoreLogChart.Parsers
         public int TotalFileEntries;
         public int ProcessedEntries;
 
+        private bool isSetRigStartTime = false;
+        private DateTime rigStartTime;
         private string filePath = "";
 
         public BackgroundLogParser(string filename)
@@ -53,6 +55,9 @@ namespace ClaymoreLogChart.Parsers
             ExtractIncorrectSharesData();
             ReportProgress(94, "Extracting Miner GPU Settings\n");
             ExtractMinerAndGpuSettings();
+
+            foreach (GpuData gpu in gpus.Values)
+                gpu.RigStartTime = rigStartTime;
         }
 
         private void ResetCounters()
@@ -238,6 +243,27 @@ namespace ClaymoreLogChart.Parsers
                 entry = logs[entIndex];
                 if(entry.LogText.Contains(shareFoundLineClue))
                 {
+                    if(!isSetRigStartTime)
+                    {
+                        try
+                        {
+                            string dateTimeText = entry.LogText.Substring(4, entry.LogText.IndexOf("SHARE") - 3 - 4).Trim().Replace('-', ' ');
+                            Regex format = new Regex(@"(?<month>\d+)/(?<day>\d+)/(?<year>\d+) (?<hour>\d+):(?<min>\d+):(?<sec>\d+)");
+                            Match matches = format.Match(dateTimeText);
+                            int y = int.Parse(matches.Groups["year"].Value) + 2000;
+                            int m = int.Parse(matches.Groups["month"].Value);
+                            int d = int.Parse(matches.Groups["day"].Value);
+                            int h = int.Parse(matches.Groups["hour"].Value);
+                            int n = int.Parse(matches.Groups["min"].Value);
+                            int s = int.Parse(matches.Groups["sec"].Value);
+                            rigStartTime = new DateTime(y, m, d, h, n, s) - entry.Time;
+                        }
+                        catch(Exception x)
+                        {
+                            rigStartTime = new DateTime();
+                        }
+                        isSetRigStartTime = true;
+                    }
                     gpuIndexStart = entry.LogText.IndexOf("(");
                     gpuIndexEnd = entry.LogText.IndexOf(")");
                     gpuIndexData = entry.LogText.Substring(gpuIndexStart, gpuIndexEnd - gpuIndexStart);
