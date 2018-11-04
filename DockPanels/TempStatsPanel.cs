@@ -71,16 +71,16 @@ namespace ClaymoreLogChart.DockPanels
             {
                 PanelTitleLabel.BackColor  = ThemeColors.PresetColors[gpu.Index];
                 PanelTitleLabel.Text = string.Format("GPU {0} - {1}", gpu.Index, gpu.Text);
-                AverageLabel.Text = gpu.AvergaeHashRate.ToString("n4");
-                MinLabel.Text = gpu.MinimumHashRate.ToString("n2");
-                MaxLabel.Text = gpu.MaximumHashRate.ToString("n2");
-                SdLabel.Text = gpu.StdDevHashRate.ToString("n2");
+                AverageLabel.Text = gpu.AvergaeTemperature.ToString("n2");
+                MinLabel.Text = gpu.MinimumTemperature.ToString("n0");
+                MaxLabel.Text = gpu.MaximumTemperature.ToString("n0");
+                SdLabel.Text = gpu.StdDevTemperature.ToString("n2");
 
 
-                FanAverageLabel.Text = gpu.AvergaeHashRate.ToString("n4");
-                FanMinLabel.Text = gpu.MinimumHashRate.ToString("n2");
-                FanMaxLabel.Text = gpu.MaximumHashRate.ToString("n2");
-                FanSdLabel.Text = gpu.StdDevHashRate.ToString("n2");
+                FanAverageLabel.Text = gpu.AvergaeFanSpeed.ToString("n2");
+                FanMinLabel.Text = gpu.MinimumFanSpeed.ToString("n0");
+                FanMaxLabel.Text = gpu.MaximumFanSpeed.ToString("n0");
+                FanSdLabel.Text = gpu.StdDevFanSpeed.ToString("n2");
             }
             else
             {
