@@ -311,7 +311,7 @@ namespace ClaymoreLogChart.DockPanels
                 Charter.ChartAreas[i].AxisX.ScrollBar.LineColor = ThemeColors.ChartScrollBarBorderColor;
 
 
-                Charter.ChartAreas[i].AxisX.LabelStyle.Format = "dd/MM/y HH:mm";// "Dd-HH:mm";
+                Charter.ChartAreas[i].AxisX.LabelStyle.Format = "HH:mm\n\rdd/MM/y";// "Dd-HH:mm";
                 
                 //Setting Selection, Scrolling and Zooming
                 Charter.ChartAreas[i].CursorX.IsUserEnabled = true;
